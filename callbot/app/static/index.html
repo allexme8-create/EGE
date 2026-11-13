@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Обзвон+ — обзвон клиентов с распознаванием ответов</title>
+<link rel="stylesheet" href="/static/styles.css?v=1">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f9d58'/><text y='72' x='50' font-size='58' text-anchor='middle' fill='white' font-family='Arial'>З</text></svg>">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-logo">З</div>
+      <div>
+        <div class="brand-name">Обзвон+</div>
+        <div class="brand-sub">GSM-модем · МегаФон</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="#/dashboard" data-nav="dashboard"><span class="ico">▦</span> Обзор</a>
+      <a href="#/campaigns" data-nav="campaigns"><span class="ico">☎</span> Кампании</a>
+      <a href="#/results" data-nav="results"><span class="ico">▤</span> Таблица ответов</a>
+      <a href="#/do-not-call" data-nav="dnc"><span class="ico">⛔</span> Не звонить</a>
+      <div class="nav-sep"></div>
+      <a href="#/equipment" data-nav="equipment"><span class="ico">◉</span> Оборудование</a>
+      <a href="#/settings" data-nav="settings"><span class="ico">⚙</span> Настройки</a>
+      <a href="/api/docs" target="_blank"><span class="ico">↗</span> API</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div><span class="status-dot" id="mode-dot"></span><span id="mode-label">проверка…</span></div>
+      <div id="asr-label" class="mt8">ASR: —</div>
+      <div id="tts-label">TTS: —</div>
+      <div class="mt8">v<span id="version-label">1.0.0</span></div>
+    </div>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <div class="crumbs" id="crumbs">Обзор</div>
+        <h1 id="page-title">Обзор</h1>
+      </div>
+      <div class="spacer"></div>
+      <div id="top-actions" class="row"></div>
+    </header>
+    <main class="content" id="view"></main>
+  </div>
+</div>
+<div class="toast-wrap" id="toasts"></div>
+<div id="modal-host"></div>
+<script src="/static/app.js?v=1"></script>
+</body>
+</html>
