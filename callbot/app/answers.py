@@ -238,7 +238,25 @@ def parse_answer(question: dict, text: str, *, from_dtmf: bool = False, digit: s
                               matched=bool(text.strip()), method="asr")
     if parsed.matched and parsed.confidence >= min_confidence and not parsed.display:
         parsed.display = str(parsed.value)
+    if parsed.matched and is_non_answer(text):
+        # «Не понял вопрос» — это не ответ «да», снижаем уверенность.
+        parsed.value = ""
+        parsed.display = (text or "").strip()[:200]
+        parsed.confidence = 0.25
+        parsed.matched = False
     return parsed
+
+
+NON_ANSWER_PHRASES = (
+    "не понял", "не поняла", "повторите", "какой вопрос", "что вы сказали",
+    "не расслышал", "не расслышала", "алло", "это кто", "кто звонит",
+)
+
+
+def is_non_answer(text: str) -> bool:
+    """Абонент не ответил по существу (переспросил, не расслышал)."""
+    norm = normalize_text(text)
+    return any(_match_phrase(norm, phrase) for phrase in NON_ANSWER_PHRASES)
 
 
 def has_noise_markers(text: str) -> bool:
@@ -249,7 +267,9 @@ def has_noise_markers(text: str) -> bool:
     words = norm.split(" ")
     markers = {"э", "ээ", "эээ", "мм", "ммм", "мгм", "ага", "ну", "это", "самое", "как", "его"}
     short_noise = sum(1 for w in words if len(w) <= 2)
-    return short_noise / max(len(words), 1) > 0.5 or (len(words) >= 3 and sum(w in markers for w in words) >= 3)
+    if len(words) >= 3 and short_noise / len(words) > 0.5:
+        return True
+    return len(words) >= 3 and sum(w in markers for w in words) >= 3
 
 
 def answer_is_low_confidence(answer: dict, min_confidence: float = 0.45) -> bool:

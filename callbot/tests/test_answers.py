@@ -93,3 +93,18 @@ def test_low_confidence_flag() -> None:
     parsed = parse_answer({"type": "yes_no"}, "ммм не разобрать")
     assert not parsed.matched
     assert parsed.confidence < 0.45
+
+
+@pytest.mark.parametrize("text,low", [
+    ("да", False),
+    ("нет", False),
+    ("да, конечно", False),
+    ("м э э наверное да не знаю", True),
+    ("ну это самое как его", True),
+    ("мне нужна консультация по оплате", False),
+])
+def test_low_confidence_marks_noise(text: str, low: bool) -> None:
+    from app.answers import answer_is_low_confidence
+
+    answer = {"method": "asr", "confidence": 0.8, "raw_text": text}
+    assert answer_is_low_confidence(answer, 0.45) is low
